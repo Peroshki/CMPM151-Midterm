@@ -7,12 +7,11 @@ public class Background : MonoBehaviour
 {
     private GameObject[] gos;
     private int fidelity = 75;
-    private Transform parentTranform;
     private float smooth = 5.0f;
     private float seed;
 
     public int height;
-    public GameObject go;
+    public GameObject go, blockhead;
 
     /* Object Hierarchy 
        * Script (Empty) <- (Background.cs)
@@ -28,29 +27,23 @@ public class Background : MonoBehaviour
         GetCameraInfo();
 
         // Get head object for cloned objects
-        parentTranform = GameObject.Find("BlockHead").transform;
         seed = UnityEngine.Random.value * 100;
 
-        initializeBars(fidelity, parentTranform);
+        initializeBars(fidelity);
     }
 
-    void initializeBars(int size, Transform head)
+    void initializeBars(int size)
     {
         gos = new GameObject[size];
-        for (int i = 0; i < size; i++)
-        {
-            gos[i] = Instantiate(go, new Vector3((i % 2 == 0 ? i : -1 * i) / 2.0f, 0, 0), Quaternion.identity);
-            gos[i].name = "Block " + (i + 1);
-            gos[i].transform.parent = head;
-            gos[i].GetComponent<SpriteRenderer>().enabled = true;
-        }
+        for (int i = 0; i < size; i++) gos[i] = MakeBar(i, "Block", blockhead.transform);
     }
+
 
     /* UPDATE FUNCTIONS */
 
     void Update()
     {
-        rotateBarParent();
+        rotateBarParent(0, blockhead.transform);
 
         updateBarTransforms();
     }
@@ -70,12 +63,12 @@ public class Background : MonoBehaviour
         }
     }
 
-    void rotateBarParent()
+    void rotateBarParent(float y, Transform parent)
     {
         float zAngle = Mathf.PerlinNoise(Time.time / 5.0f, seed) * 180.0f; // OR Mathf.Sin(Time.time)
 
-        Quaternion spin = Quaternion.Euler(0, Time.time / 10.0f, zAngle);
-        parentTranform.rotation = Quaternion.Slerp(parentTranform.rotation, spin, Time.deltaTime * smooth);
+        Quaternion spin = Quaternion.Euler(0, y, zAngle);
+        parent.rotation = Quaternion.Slerp(parent.rotation, spin, Time.deltaTime * smooth);
     }
 
     /* UTLITY FUNCTIONS */
@@ -83,6 +76,16 @@ public class Background : MonoBehaviour
     void GetCameraInfo()
     {
         Debug.Log("Camera Width : " + Camera.main.scaledPixelWidth + "\nCamera Height : " + Camera.main.scaledPixelHeight);
+    }
+
+    GameObject MakeBar(int num, string name_type, Transform parent)
+    {
+        GameObject bar = Instantiate(go, new Vector3( (num % 2 == 0 ? num : -1 * num) / 2.0f, 0, 25) , Quaternion.identity);
+        bar.name = name_type + " " + (num + 1);
+        bar.transform.parent = parent;
+        bar.GetComponent<SpriteRenderer>().enabled = true;
+
+        return bar;
     }
 
     //void CheckResize()
