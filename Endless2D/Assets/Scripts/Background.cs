@@ -35,10 +35,7 @@ public class Background : MonoBehaviour
     void initializeBars(int size)
     {
         gos = new GameObject[size];
-        for (int i = 0; i < size; i++)
-        {
-            gos[i] = MakeBar(i, "Block", blockhead.transform);
-        }
+        for (int i = 0; i < size; i++) gos[i] = MakeBar(i, "Block", blockhead.transform);
     }
 
 
