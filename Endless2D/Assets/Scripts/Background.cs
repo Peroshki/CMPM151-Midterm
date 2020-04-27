@@ -80,7 +80,7 @@ public class Background : MonoBehaviour
 
     GameObject MakeBar(int num, string name_type, Transform parent)
     {
-        GameObject bar = Instantiate(go, new Vector3( (num % 2 == 0 ? num : -1 * num) / 2.0f, 0, 25) , Quaternion.identity);
+        GameObject bar = Instantiate(go, new Vector3( (num % 2 == 0 ? num : -1 * num) / 2.0f, 0, 0) , Quaternion.identity);
         bar.name = name_type + " " + (num + 1);
         bar.transform.parent = parent;
         bar.GetComponent<SpriteRenderer>().enabled = true;

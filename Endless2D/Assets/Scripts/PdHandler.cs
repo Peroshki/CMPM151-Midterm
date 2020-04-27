@@ -5,7 +5,6 @@ using UnityOSC; // Include UnityOSC namespace
 
 public class PdHandler : MonoBehaviour
 {
-
     //************* Need to setup this server dictionary...
 	Dictionary<string, ServerLog> servers = new Dictionary<string, ServerLog> ();
 	//*************
@@ -19,9 +18,29 @@ public class PdHandler : MonoBehaviour
 
 		//************* Instantiate the OSC Handler...
 	    OSCHandler.Instance.Init ();
-		// OSCHandler.Instance.SendMessageToClient ("pd", "/unity/trigger", 1);
+		OSCHandler.Instance.SendMessageToClient("pd", "/unity/start", 1);
         //*************
     }
+
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.JoystickButton0)) {
+			Debug.Log("A pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/A", 1);
+		}
+		else if (Input.GetKeyDown(KeyCode.JoystickButton1)) {
+			Debug.Log("B pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/B", 1);
+		}
+		else if (Input.GetKeyDown(KeyCode.JoystickButton2)) {
+			Debug.Log("X pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/X", 1);
+		}
+		else if (Input.GetKeyDown(KeyCode.JoystickButton3)) {
+			Debug.Log("Y pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/Y", 1);
+		}
+
+	}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -59,4 +78,8 @@ public class PdHandler : MonoBehaviour
 
 		// Send message to Pd by OSCHandler.Instance.SendMessageToClient("pd", "/unity/<object name>", count * 20 + 50);
     }
+
+	void onApplicationQuit() {
+		OSCHandler.Instance.SendMessageToClient("pd", "/unity/death", 1);
+	}
 }
