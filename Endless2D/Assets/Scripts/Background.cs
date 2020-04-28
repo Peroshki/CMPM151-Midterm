@@ -6,12 +6,16 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     private GameObject[] gos;
-    private int fidelity = 75;
     private float smooth = 5.0f;
     private float seed;
+    private float timeOffset = 0;
+    private float perlinOffset;
 
-    public int height;
+
+    public int numBars = 200;
+    public int height = 10000;
     public GameObject go, blockhead;
+
 
     /* Object Hierarchy 
        * Script (Empty) <- (Background.cs)
@@ -26,10 +30,10 @@ public class Background : MonoBehaviour
         // Print camera dimensions
         GetCameraInfo();
 
-        // Get head object for cloned objects
         seed = UnityEngine.Random.value * 100;
+        perlinOffset = (Mathf.PerlinNoise(0, seed)) * 180.0f;
 
-        initializeBars(fidelity);
+        initializeBars(numBars);
     }
 
     void initializeBars(int size)
@@ -43,18 +47,21 @@ public class Background : MonoBehaviour
 
     void Update()
     {
-        rotateBarParent(0, blockhead.transform);
+        if (PdHandler.gamePlaying) {
+            timeOffset += 0.001f;
+            rotateBarParent(0, blockhead.transform);
+        }
 
         updateBarTransforms();
     }
 
     void updateBarTransforms()
     {
-        for (int i = 0; i < fidelity; i++)
+        for (int i = 0; i < numBars; i++)
         {
             // Control bar height by phased Sines
-            float yOffset = (Mathf.Sin((Time.time + i) * 2) + 1.0f);
-            gos[i].transform.localScale = new Vector3(100.0f, yOffset * height, 0);
+            float yOffset = (Mathf.Sin((Time.time + i)) + 1.0f);
+            gos[i].transform.localScale = new Vector3(120.0f, yOffset * height, 0);
 
             // Modify hue over time
             float timeStep = Time.time / 20.0f;
@@ -65,7 +72,7 @@ public class Background : MonoBehaviour
 
     void rotateBarParent(float y, Transform parent)
     {
-        float zAngle = Mathf.PerlinNoise(Time.time / 5.0f, seed) * 180.0f; // OR Mathf.Sin(Time.time)
+        float zAngle = (Mathf.PerlinNoise(timeOffset, seed)) * 180.0f - perlinOffset;
 
         Quaternion spin = Quaternion.Euler(0, y, zAngle);
         parent.rotation = Quaternion.Slerp(parent.rotation, spin, Time.deltaTime * smooth);

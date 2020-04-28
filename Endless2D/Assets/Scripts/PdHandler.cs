@@ -5,11 +5,14 @@ using UnityOSC; // Include UnityOSC namespace
 
 public class PdHandler : MonoBehaviour
 {
+    string pd_to_unity;
     //************* Need to setup this server dictionary...
 	Dictionary<string, ServerLog> servers = new Dictionary<string, ServerLog> ();
 	//*************
 
-    string pd_to_unity;
+    public static bool gamePlaying = false;
+	public static bool audioPlaying = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +21,7 @@ public class PdHandler : MonoBehaviour
 
 		//************* Instantiate the OSC Handler...
 	    OSCHandler.Instance.Init ();
-		OSCHandler.Instance.SendMessageToClient("pd", "/unity/start", 1);
+		OSCHandler.Instance.SendMessageToClient("pd", "/unity/init", 1);
         //*************
     }
 
@@ -38,6 +41,16 @@ public class PdHandler : MonoBehaviour
 		else if (Input.GetKeyDown(KeyCode.JoystickButton3)) {
 			Debug.Log("Y pressed");
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/Y", 1);
+		}
+		else if (Input.GetKeyDown(KeyCode.JoystickButton6)) {
+			Debug.Log("Option pressed");
+			audioPlaying = !audioPlaying;
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/toggleaudio", audioPlaying ? 1 : 0);
+		}
+		else if (Input.GetKeyDown(KeyCode.JoystickButton7)) {
+			Debug.Log("Start pressed");
+			gamePlaying = !gamePlaying;
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", gamePlaying ? 1 : 0);
 		}
 
 	}
