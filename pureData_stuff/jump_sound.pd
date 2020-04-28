@@ -1,43 +1,47 @@
-#N canvas 261 105 778 445 12;
+#N canvas 261 105 1025 445 12;
 #X obj 294 255 noise~;
-#X msg 39 153 \; pd dsp \$1;
-#X obj 41 126 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X msg 23 270 \; pd dsp \$1;
+#X obj 25 243 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 426 393 dac~;
 #X obj 448 331 bp~;
-#X floatatom 441 283 5 0 0 0 - - -;
-#X obj 446 235 line;
-#X obj 447 144 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X floatatom 494 256 5 0 0 0 - - -;
+#X obj 499 208 line;
+#X obj 408 104 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 384 22 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 392 16 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X msg 536 321 3;
 #X text 421 15 The button to press;
 #X msg 597 311 2;
-#X obj 560 108 + 1;
-#X obj 484 62 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 708 99 + 1;
+#X obj 632 53 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 517 153 select 1;
-#X obj 602 107 - 1;
-#X obj 514 110 f 0;
-#X obj 516 68 metro 160;
-#X msg 416 186 550 150;
-#X msg 510 195 0 150;
+#X obj 665 144 select 1;
+#X obj 750 98 - 1;
+#X obj 662 101 f 0;
+#X obj 664 59 metro 160;
+#X msg 377 146 550 150;
+#X msg 658 186 0 150;
 #X obj 227 195 line;
 #X obj 270 223 osc~;
 #X obj 579 241 loadbang;
 #X obj 332 315 *~ 0.4;
 #X obj 344 231 *~ 0.05;
-#X obj 41 65 loadbang;
-#X obj 372 101 + 1;
-#X obj 296 55 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 25 182 loadbang;
+#X obj 282 68 + 1;
+#X obj 206 22 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 329 146 select 1;
-#X obj 414 100 - 1;
-#X obj 326 103 f 0;
+#X obj 239 113 select 1;
+#X obj 324 67 - 1;
+#X obj 236 70 f 0;
 #X msg 211 163 1850 150;
-#X obj 324 74 metro 151;
+#X obj 234 41 metro 151;
 #X msg 322 188 0 200;
+#X text 618 32 sends signal for whoosh down noise;
+#X text 29 73 sends signal for pitch down;
+#X text 94 219 line shapes the pitch;
+#X text 465 177 line shapes bandpass;
 #X connect 0 0 23 0;
 #X connect 2 0 1 0;
 #X connect 4 0 3 0;

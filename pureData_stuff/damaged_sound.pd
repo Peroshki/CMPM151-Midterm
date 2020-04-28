@@ -1,4 +1,4 @@
-#N canvas 557 195 700 453 12;
+#N canvas 537 219 812 453 12;
 #X msg 19 53 \; pd dsp \$1;
 #X obj 288 245 phasor~;
 #X obj 282 395 dac~;
@@ -20,7 +20,7 @@
 #X connect 1 0 2 1;
 #X connect 2 0 4 0;
 #X connect 3 0 1 0;
-#X restore 410 180 pd vol_env;
+#X restore 501 234 pd vol_env;
 #N canvas 597 245 450 388 pitch_env 0;
 #X obj 37 37 inlet;
 #X obj 43 107 vline~;
@@ -38,12 +38,14 @@
 #X connect 5 0 7 0;
 #X connect 6 0 3 0;
 #X connect 7 0 6 0;
-#X restore 253 172 pd pitch_env;
+#X restore 127 178 pd pitch_env;
 #X obj 288 214 *~ 1;
 #X text 248 21 press this button to activate;
 #X msg 466 132 125;
 #X msg 360 181 9;
 #X obj 421 72 loadbang;
+#X text 493 210 encapsulated file \, controls volume envelope;
+#X text 38 146 encapsulated file \, controls pitch envelope;
 #X connect 1 0 3 0;
 #X connect 3 0 5 0;
 #X connect 4 0 0 0;
