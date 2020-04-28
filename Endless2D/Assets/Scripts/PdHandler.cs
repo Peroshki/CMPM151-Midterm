@@ -13,6 +13,7 @@ public class PdHandler : MonoBehaviour
     public static bool gamePlaying = false;
 	public static bool audioPlaying = true;
 
+	private GameObject startText;
 
     // Start is called before the first frame update
     void Start()
@@ -23,10 +24,12 @@ public class PdHandler : MonoBehaviour
 	    OSCHandler.Instance.Init ();
 		OSCHandler.Instance.SendMessageToClient("pd", "/unity/init", 1);
         //*************
+
+		startText = GameObject.Find("StartImage");
     }
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.JoystickButton0)) {
+		if ((Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.Return)) && gamePlaying) {
 			Debug.Log("A pressed");
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/A", 1);
 		}
@@ -47,8 +50,11 @@ public class PdHandler : MonoBehaviour
 			audioPlaying = !audioPlaying;
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/toggleaudio", audioPlaying ? 1 : 0);
 		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton7)) {
+		else if ((Input.GetKeyDown(KeyCode.JoystickButton7) || Input.GetKeyDown(KeyCode.Return)) && !gamePlaying) {
 			Debug.Log("Start pressed");
+
+			startText.SetActive(false);
+
 			gamePlaying = !gamePlaying;
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", gamePlaying ? 1 : 0);
 		}
