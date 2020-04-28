@@ -10,22 +10,20 @@ public class Enemies : MonoBehaviour
     // speed towards enemies (can be changed in the Unity editor)
     public float speed;
 
-    // set the object that you want to this effect on (player)
-    public GameObject effect;
+    private float despawn;
+
+    void Start() 
+    {
+        despawn = GameObject.Find("DespawnPoint").transform.position.x;
+    }
 
     void Update()
     {
-        transform.Translate(Vector2.left * speed * Time.deltaTime);
-    }
+        if (PdHandler.gamePlaying)
+            transform.Translate(Vector2.left * speed * Time.deltaTime);
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        // block would be the name of your player object
-        if (other.CompareTag("Block"))
+        if (gameObject.transform.position.x < despawn)
         {
-            other.GetComponent<Block>(); // -- health or 
-            //any other variable that we want to change if there is a collision
-            Instantiate(effect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

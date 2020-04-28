@@ -31,24 +31,25 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (timeBtwSpawn <= 0)
+        if (PdHandler.gamePlaying)
         {
-            // begin spawnning enmies
-            Instantiate(Enemies, transform.position, Quaternion.identity);
-            timeBtwSpawn = startTimeBtwSpawn;
-
-            // check if decrease in spawn time is needed
-            if (startTimeBtwSpawn > minTime)
+            if (timeBtwSpawn <= 0)
             {
-                startTimeBtwSpawn -= decreaseTime;
+                // begin spawnning enmies
+                Instantiate(Enemies, transform.position + new Vector3(0f, 3f, 0f), Quaternion.identity);
+                timeBtwSpawn = Random.Range(0.75f, 1.25f);
+
+                // check if decrease in spawn time is needed
+                if (startTimeBtwSpawn > minTime)
+                {
+                    startTimeBtwSpawn -= decreaseTime;
+                }
+            }
+            else
+            {
+                timeBtwSpawn -= Time.deltaTime;
             }
         }
-        else
-        {
-            timeBtwSpawn -= Time.deltaTime;
-        }
-
     }
 
 }
