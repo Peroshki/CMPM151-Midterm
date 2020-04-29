@@ -13,42 +13,39 @@ public class Spawner : MonoBehaviour
     private float timeBtwSpawn;
 
     // set the time between spawns
-    public float startTimeBtwSpawn;
+    public float maxBtwnSpawn;
 
-    public float decreaseTime = 1;
+    public float decreaseTime;
 
     // min amount of time before game becomes to difficult
-    public float minTime = 0.65f;
+    public float minTime;
 
-
+    private int num_enemies;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        num_enemies = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PdHandler.gamePlaying)
+        if (!PdHandler.gameOnMenu)
         {
             if (timeBtwSpawn <= 0)
             {
+			    OSCHandler.Instance.SendMessageToClient("pd", "/unity/spawn", 1);
                 // begin spawnning enmies
-                Instantiate(Enemies, transform.position + new Vector3(0f, 3f, 0f), Quaternion.identity);
-                timeBtwSpawn = Random.Range(0.75f, 1.25f);
+                Instantiate(Enemies, new Vector3(transform.position.x, Random.Range(-3.9f, 5f), 0f), Quaternion.identity);
+                timeBtwSpawn = Random.Range(minTime, maxBtwnSpawn);
 
+                ++num_enemies;
                 // check if decrease in spawn time is needed
-                if (startTimeBtwSpawn > minTime)
-                {
-                    startTimeBtwSpawn -= decreaseTime;
-                }
+                if (maxBtwnSpawn > (minTime + decreaseTime) && ( num_enemies % 10 == 0 )) maxBtwnSpawn -= decreaseTime;
             }
             else
-            {
-                timeBtwSpawn -= Time.deltaTime;
-            }
+            { timeBtwSpawn -= Time.deltaTime; }
         }
     }
 

@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityOSC; // Include UnityOSC namespace
+using UnityEngine.SceneManagement;
 
 public class PdHandler : MonoBehaviour
 {
     string pd_to_unity;
+	public GameObject deathText, startImage;
     //************* Need to setup this server dictionary...
 	Dictionary<string, ServerLog> servers = new Dictionary<string, ServerLog> ();
 	//*************
 
-    public static bool gamePlaying = false;
+    public static bool gameOnMenu = true;
 	public static bool audioPlaying = true;
+	public static bool newSpawn = false;
+	public static bool dead = false;
 
-	private GameObject startText;
 
     // Start is called before the first frame update
     void Start()
@@ -25,38 +28,43 @@ public class PdHandler : MonoBehaviour
 		OSCHandler.Instance.SendMessageToClient("pd", "/unity/init", 1);
         //*************
 
-		startText = GameObject.Find("StartImage");
     }
 
 	void Update() {
-		if ((Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.Return)) && gamePlaying) {
+		if ((Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.Space)) && !gameOnMenu) {
 			Debug.Log("A pressed");
-			OSCHandler.Instance.SendMessageToClient("pd", "/unity/A", 1);
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/jump", 1);
 		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton1)) {
-			Debug.Log("B pressed");
-			OSCHandler.Instance.SendMessageToClient("pd", "/unity/B", 1);
+		else if (Input.GetKeyDown(KeyCode.JoystickButton1) || Input.GetKeyDown(KeyCode.N)) {
+			Debug.Log("Option pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", 0);
 		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton2)) {
-			Debug.Log("X pressed");
-			OSCHandler.Instance.SendMessageToClient("pd", "/unity/X", 1);
+		else if (Input.GetKeyDown(KeyCode.JoystickButton2) || Input.GetKeyDown(KeyCode.B)) {
+			Debug.Log("Option pressed");
+			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", 1);
 		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton3)) {
-			Debug.Log("Y pressed");
-			OSCHandler.Instance.SendMessageToClient("pd", "/unity/Y", 1);
-		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton6)) {
+		else if (Input.GetKeyDown(KeyCode.JoystickButton3) || Input.GetKeyDown(KeyCode.M)) {
 			Debug.Log("Option pressed");
 			audioPlaying = !audioPlaying;
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/toggleaudio", audioPlaying ? 1 : 0);
 		}
-		else if ((Input.GetKeyDown(KeyCode.JoystickButton7) || Input.GetKeyDown(KeyCode.Return)) && !gamePlaying) {
+		else if ((Input.GetKeyDown(KeyCode.JoystickButton7) || Input.GetKeyDown(KeyCode.Return))) {
 			Debug.Log("Start pressed");
 
-			startText.SetActive(false);
-
-			gamePlaying = !gamePlaying;
-			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", gamePlaying ? 1 : 0);
+			// Restart game
+			if (dead) {
+				gameOnMenu = true;
+				startImage.SetActive(gameOnMenu);
+				deathText.SetActive(!gameOnMenu);
+				dead = false;
+				Application.LoadLevel(0);
+			}
+			// Toggle pause
+			else {
+				gameOnMenu = !gameOnMenu;
+				startImage.SetActive(gameOnMenu);
+				OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", gameOnMenu ? 0 : 1);
+			}
 		}
 
 	}

@@ -47,7 +47,7 @@ public class Background : MonoBehaviour
 
     void Update()
     {
-        if (PdHandler.gamePlaying) {
+        if (!PdHandler.gameOnMenu) {
             timeOffset += 0.001f;
             rotateBarParent(0, blockhead.transform);
         }
@@ -74,7 +74,7 @@ public class Background : MonoBehaviour
     {
         float zAngle = (Mathf.PerlinNoise(timeOffset, seed)) * 180.0f - perlinOffset;
 
-        Quaternion spin = Quaternion.Euler(0, y, zAngle);
+        Quaternion spin = Quaternion.Euler(0, 0, zAngle);
         parent.rotation = Quaternion.Slerp(parent.rotation, spin, Time.deltaTime * smooth);
     }
 
