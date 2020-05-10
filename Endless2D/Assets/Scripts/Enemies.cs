@@ -19,7 +19,7 @@ public class Enemies : MonoBehaviour
 
     void Update()
     {
-        if (PdHandler.gamePlaying)
+        if (!PdHandler.gameOnMenu)
             transform.Translate(Vector2.left * speed * Time.deltaTime);
 
         if (gameObject.transform.position.x < despawn)
