@@ -43,8 +43,12 @@ public class PdHandler : MonoBehaviour
 			Debug.Log("Option pressed");
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", 1);
 		}
-		else if (Input.GetKeyDown(KeyCode.JoystickButton3) || Input.GetKeyDown(KeyCode.M)) {
+		else if (Input.GetKeyDown(KeyCode.JoystickButton3) || Input.GetKeyDown(KeyCode.P)) {
 			Debug.Log("Option pressed");
+
+			// if (audioPlaying) AudioPeer._audioSource.Pause();
+			// else              AudioPeer._audioSource.Play();
+
 			audioPlaying = !audioPlaying;
 			OSCHandler.Instance.SendMessageToClient("pd", "/unity/toggleaudio", audioPlaying ? 1 : 0);
 		}
@@ -64,6 +68,10 @@ public class PdHandler : MonoBehaviour
 				gameOnMenu = !gameOnMenu;
 				startImage.SetActive(gameOnMenu);
 				OSCHandler.Instance.SendMessageToClient("pd", "/unity/statechange", gameOnMenu ? 0 : 1);
+			}
+
+			if (!AudioPeer._audioSource.isPlaying) {
+				AudioPeer._audioSource.Play();
 			}
 		}
 
