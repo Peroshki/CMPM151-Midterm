@@ -9,7 +9,7 @@ public class Enemies : MonoBehaviour
 {
     // speed towards enemies (can be changed in the Unity editor)
     public float speed;
-
+    public float speed2 = 0;
     private float despawn;
 
     void Start() 
@@ -19,6 +19,7 @@ public class Enemies : MonoBehaviour
 
     void Update()
     {
+        speed2 = AudioPeer.cleansedData[10] * 100;
         if (!PdHandler.gameOnMenu)
             transform.Translate(Vector2.left * speed * Time.deltaTime);
 
@@ -26,5 +27,6 @@ public class Enemies : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        transform.Rotate(speed2, 0, 0);
     }
 }
