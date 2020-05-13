@@ -6,11 +6,14 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     private GameObject[] gos;
+    private List<GameObject> flakes;
+
+    private float stopper;
 
     private int numBars;
     private float cachedLeftOffset;
 
-    public GameObject go, blockhead;
+    public GameObject go, blockhead, flake;
     public float leftOffset = -30;
 
 
@@ -24,6 +27,8 @@ public class Background : MonoBehaviour
 
         initializeBars(AudioPeer.cleansedData.Length);
 
+        stopper = 0f;
+        flakes = new List<GameObject>();
     }
 
     void initializeBars(int size)
@@ -59,6 +64,27 @@ public class Background : MonoBehaviour
             float H,S,V;
             Color.RGBToHSV(mainCam.backgroundColor, out H, out S, out V);
             enemy.gameObject.GetComponent<SpriteRenderer>().color = Color.HSVToRGB(H+0.25f, 1, 1);
+        }
+
+        if (AudioPeer.cleansedData[30] > 0.01 && AudioPeer.cleansedData[30] != stopper)
+        {
+            stopper = AudioPeer.cleansedData[30];
+            
+            GameObject sflake = Instantiate(flake, new Vector3(Random.Range(-30f, 30f), 25f, 0f), Quaternion.identity);
+            sflake.GetComponent<SpriteRenderer>().enabled = true;
+            flakes.Add(sflake);
+        }
+
+        foreach (GameObject sflake in flakes)
+        {
+            sflake.transform.Rotate(0, 0, AudioPeer.cleansedData[10] * Time.deltaTime * 500);
+
+            if (sflake.transform.position.y <= -15f)
+            {
+                Debug.Log("done");
+                Destroy(sflake);
+                flakes.Remove(sflake);
+            }
         }
     }
 
