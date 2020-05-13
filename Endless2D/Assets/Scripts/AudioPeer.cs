@@ -12,17 +12,22 @@ public class AudioPeer : MonoBehaviour
 	// need to instantiate an audio source and array of samples to store the fft data.
 	[Range(0.01f, 1f)]
     public float deltaUpdate;
+	[Range(0, 1f)]
+	public float changeTolerance;
 	public int numPoints;
 	public float height;
+	public float colorScale = 10;
 
 	public static AudioSource _audioSource;
 	public static float[] spectrumData = new float[512];
 	public static float interpolationPos;
 	public static float[] cleansedData = {0.0f};
+	public static float[] prevData = {0.0f};
 
 	// Useful info for other programs
 	public static int maxDataIndex;
     public static Color colorOffset;
+	public static int maxChangeIndex;
 
 
 	// Use this for initialization
@@ -36,7 +41,6 @@ public class AudioPeer : MonoBehaviour
 
 		GetSpectrumAudioSource ();
 		updateFFT();
-
 	}
 
 
@@ -49,16 +53,37 @@ public class AudioPeer : MonoBehaviour
 	void updateFFT() {
         delTime += Time.deltaTime;
         if (delTime >= deltaUpdate) {
-			print("Updating");
             delTime = 0;
             calculateFFTSizes(numPoints, height);
-            colorOffset = Color.HSVToRGB((float)maxDataIndex / (float)numPoints, 1.0f, 0.5f);
+			calculateMaxChange();
+            // colorOffset = Color.HSVToRGB((float)maxDataIndex / (float)numPoints, 1.0f, 0.5f);
+            colorOffset = Color.HSVToRGB((float)maxChangeIndex / (float)numPoints * colorScale, 1.0f, 0.5f);
         }
 		interpolationPos = delTime / deltaUpdate;
     }
 
+	void calculateMaxChange() {
+		int maxDiffIndex = 0;
+		float maxDiff = 0;
+		bool entered = false;
+		for (int i = 10; i < cleansedData.Length && i < prevData.Length; ++i) {
+			entered = true;
+			float delta = Mathf.Abs(cleansedData[i]-prevData[i]);
+			if (delta > maxDiff && delta > changeTolerance) {
+				maxDiff = delta;
+				maxDiffIndex = i;
+			}
+		}
+		
+		maxChangeIndex = maxDiffIndex;
+	}
+
 	public static void calculateFFTSizes(int numPartitions, float scale) 
 	{
+		prevData = new float[numPartitions];
+		for (int i = 0; i < cleansedData.Length && i < prevData.Length; ++i) {
+			prevData[i] = cleansedData[i];
+		}
         // animate the cube size based on sample data
 		cleansedData = new float[numPartitions];
 		float partitionIndx = 0;

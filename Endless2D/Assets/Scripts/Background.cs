@@ -12,6 +12,8 @@ public class Background : MonoBehaviour
 
     public GameObject go, blockhead;
     public float leftOffset = -30;
+    [Range(0, 1)]
+    public float colorDamp = 0.01f;
 
 
 
@@ -20,7 +22,7 @@ public class Background : MonoBehaviour
     void Start()
     {
         // Print camera dimensions
-        GetCameraInfo();
+        // GetCameraInfo();
 
         initializeBars(AudioPeer.cleansedData.Length);
 
@@ -54,11 +56,12 @@ public class Background : MonoBehaviour
             gos[i].transform.localScale = Vector3.Lerp(gos[i].transform.localScale, newPos, AudioPeer.interpolationPos);
         }
         Camera mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        mainCam.backgroundColor = Color.Lerp(mainCam.backgroundColor, AudioPeer.colorOffset, AudioPeer.interpolationPos);
+        mainCam.backgroundColor = Color.Lerp(mainCam.backgroundColor, AudioPeer.colorOffset, AudioPeer.interpolationPos*colorDamp);
         foreach (Enemies enemy in GameObject.FindObjectsOfType<Enemies>()) {
             float H,S,V;
             Color.RGBToHSV(mainCam.backgroundColor, out H, out S, out V);
-            enemy.gameObject.GetComponent<SpriteRenderer>().color = Color.HSVToRGB(H+0.25f, 1, 1);
+            // enemy.gameObject.GetComponent<SpriteRenderer>().color = Color.HSVToRGB(H+0.25f, 1, 1);
+            enemy.gameObject.GetComponent<SpriteRenderer>().color = Color.black;
         }
     }
 

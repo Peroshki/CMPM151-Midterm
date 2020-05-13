@@ -656,6 +656,7 @@ MonoBehaviour:
   go: {fileID: 1351186214}
   blockhead: {fileID: 1811440474}
   leftOffset: -30
+  colorDamp: 0.01
 --- !u!114 &719924648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1557,7 +1558,7 @@ GameObject:
   - component: {fileID: 1995536291}
   - component: {fileID: 1995536293}
   m_Layer: 0
-  m_Name: Audio Source
+  m_Name: Song
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1575,7 +1576,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e87ee9e807fd9534590be3defd4dab7a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.44
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1686,5 +1687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deltaUpdate: 0.117
+  changeTolerance: 0.19
   numPoints: 200
   height: 10
+  colorScale: 20
